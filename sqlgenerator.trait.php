@@ -22,13 +22,10 @@ trait SQLGenerator
 
   /**
    * Generate a " CREATE TABLE " SQL statement.
-   * 
-   * @param bool $output Return the instance itself or the generated SQL.
-   * @param bool $generateOnly Determine if the table should be created when necessary.
-   * 
-   * @return mixed
+   *
+   * @return object
   */
-  public function createTable($output = false, $generateOnly = false) 
+  public function createTable()
   {
       $this->SQL = 'CREATE TABLE IF NOT EXISTS ' . $this->table . '(';
       $c = 0;
@@ -42,13 +39,9 @@ trait SQLGenerator
         $this->SQL .= ",\nPRIMARY KEY(id)";
       }
       $this->SQL .= ')';
-      if(!$this->hasCache() && !$generateOnly) 
-      {
-        $this->PDO->exec($this->SQL);
-        $this->cache($this->SQL); // handle structure cache
-      }
+      $this->PDO->exec($this->SQL);
       $this->_dump('sql.dump', $this->SQL);
-      return $output ? $this->SQL:$this;
+      return $this;
   }
 
   /**
