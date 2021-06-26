@@ -25,3 +25,21 @@ jeux_video.commentaires
  FROM jeux_video
 ================================================================================
 
+--------------------------------------------------------------------------------
+[2021/06/26 11:47:06am] - ::1
+--------------------------------------------------------------------------------
+SELECT jeux_video.id, jeux_video.ID, jeux_video.nom, jeux_video.possesseur,
+jeux_video.console, jeux_video.prix, jeux_video.nbre_joueurs_max,
+jeux_video.commentaires
+ FROM jeux_video
+================================================================================
+
+--------------------------------------------------------------------------------
+[2021/06/26 11:53:51am] - ::1
+--------------------------------------------------------------------------------
+SELECT jeux_video.id, jeux_video.ID, jeux_video.nom, jeux_video.possesseur,
+jeux_video.console, jeux_video.prix, jeux_video.nbre_joueurs_max,
+jeux_video.commentaires
+ FROM jeux_video
+================================================================================
+
