@@ -24,3 +24,12 @@ $Queries = new Queries($PDO);
 
 .. permet d'instancier un nouvel objet de la classe Queries sur `$Queries` prenant en paramètre un objet de la classe PDO.
 
+### Spécifier une table 
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('jeux_video')
+```
+
+La méthode `Queries::table()` permet de spécifier une table. 
+
