@@ -24,7 +24,7 @@ $Queries = new Queries($PDO);
 
 echo '<pre>';
 
-var_dump($Queries->table('jeux_videos')
+var_dump($Queries->table('example')
                  ->select());
 
 echo '</pre>';

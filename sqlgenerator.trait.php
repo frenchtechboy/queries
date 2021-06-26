@@ -20,70 +20,6 @@ trait SQLGenerator
   /** @var array $lastFetched The last fetched rows using the fetch() method. */ 
   private $lastFetched = NULL;
 
-  /**
-   * Generate a " CREATE TABLE " SQL statement.
-   *
-   * @return object
-  */
-  public function createTable()
-  {
-      $this->SQL = 'CREATE TABLE IF NOT EXISTS ' . $this->table . '(';
-      $c = 0;
-      foreach($this->userSpecifiedFields as $field) 
-      {
-        $this->SQL .= (!$c ? "\n":"") . $field . ' ' . $this->types[$c] . (preg_match('/[a-zA-Z_]+\.id/', $field) ? ' AUTO_INCREMENT':'') . ' NOT NULL' . (($c + 1) < count($this->userSpecifiedFields) ? ",\n":'');
-        $c++;
-      }
-      if(in_array($this->table . '.' . 'id', $this->userSpecifiedFields))
-      {
-        $this->SQL .= ",\nPRIMARY KEY(id)";
-      }
-      $this->SQL .= ')';
-      $this->PDO->exec($this->SQL);
-      $this->_dump('sql.dump', $this->SQL);
-      return $this;
-  }
-
-  /**
-   * Generate a SHOW TABLES statement.
-   * 
-   * @return array An array of strings that represent the list of existing tables. 
-  */
-  public function showTables() : array 
-  {   
-      $d = $this->PDO->query('SHOW TABLES')->fetchAll(PDO::FETCH_NUM);
-      $res = [];
-      foreach($d as $r)
-      {
-        $res[] = $r[0];
-      }
-      $this->dump('sql.dump', 'SHOW TABLES');
-      return $res;
-  }
-
-  /**
-   * Truncate the table that is specified as the Queries::$table value. 
-   * 
-   * @return int
-  */
-  public function truncate() : int
-  {
-     $SQL = 'TRUNCATE TABLE ' . $this->table;
-     $this->dump('sql.dump', $this->SQL);
-     return $this->PDO->exec($this->SQL);
-  }
-  
-  /**
-   * Drop the table that is specified as the Queries::$table value. 
-   * 
-   * @return int
-  */
-  public function drop() : int
-  {
-      $this->SQL = 'DROP TABLE ' . $this->table;
-      $this->dump('sql.dump', $this->SQL);
-      return $this->PDO->exec($this->SQL);
-  }
 
   /** 
    *  Bind a column's value that may be used for the next query 
@@ -156,25 +92,31 @@ trait SQLGenerator
   */
   public function field($name, string $type = '') : object
   {
-      if (!is_array($name)) {
-          if (!preg_match('/^[a-zA-Z_]+\.[a-zA-Z_]+(?:[ ]+AS[ ]+[a-zA-Z_. ]+)?[ ]*$/', $name)) {
+      if (!is_array($name))
+      {
+          if (!preg_match('/^[a-zA-Z_]+\.[a-zA-Z_]+(?:[ ]+AS[ ]+[a-zA-Z_. ]+)?[ ]*$/', $name))
+          {
               $name = $this->table . '.' . trim($name); // columns names are prefixed
           }
 
           $this->userSpecifiedFields[] = $name;
 
-          if (!in_array($name, $this->fields)) {
+          if (!in_array($name, $this->fields))
+          {
               // @TODO
               $this->fields[] = $name;
           }
-          if (!empty($type)) {
+          if (!empty($type))
+          {
               // @TODO
               $this->types[] = $type;
           }
           return $this;
       }
-      else {
-          foreach ($name as $column) {
+      else
+      {
+          foreach ($name as $column)
+          {
               $this->field($column);
           }
       }
