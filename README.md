@@ -90,6 +90,18 @@ $Queries = (new Queries($PDO))
     			->save();
 ```
 
+Après une requête INSERT, il est possible de récupérer l'id de l'élément inséré tel que : 
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->bind('content', 'Lorem ipsum dolor sit amet', PDO::PARAM_STR)
+    			->bind('timestamp', time(), PDO::PARAM_INT)
+    			->save();
+
+$lastInsertId = $Queries->lastInsertId();
+```
+
 **Requete UPDATE** 
 
 La différence, pour une requête UPDATE est que l'on spécifie l'id ainsi qu'une clause WHERE. 
@@ -112,6 +124,4 @@ $Queries = (new Queries($PDO))
     			->where('id > 10')
     			->delete();
 ```
-
-
 
