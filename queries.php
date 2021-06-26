@@ -93,18 +93,11 @@ class Queries
   */
   public function get_columns_names(string $table)
   {
-    try 
-    {
-       /* A `dummy` table with an id column only has been written, so we can use it with a JOIN
-          to fetch any other table columns names */
-       $this->fields = @array_keys($this->PDO->query('SELECT *, dummy.id AS dummy_id FROM dummy LEFT JOIN ' . $table . ' ON 1 = 1 LIMIT 1')
-                                             ->fetch(PDO::FETCH_ASSOC));
-    }
-    catch(PDOException $e) 
-    {
-       // Table not found ?
-       $this->fields = [];
-    }
+
+    /* A `dummy` table with an id column only has been written, so we can use it with a JOIN
+       to fetch any other table columns names */
+    $this->fields = @array_keys($this->PDO->query('SELECT *, dummy.id AS dummy_id FROM dummy LEFT JOIN ' . $table . ' ON 1 = 1 LIMIT 1')
+                                          ->fetch(PDO::FETCH_ASSOC));
 
     if(is_null($this->fields))
     {
