@@ -28,8 +28,90 @@ $Queries = new Queries($PDO);
 
 ```php
 $Queries = (new Queries($PDO))
-    			->table('jeux_video')
+    			->table('example');
 ```
 
 La méthode `Queries::table()` permet de spécifier une table. 
+
+### Requête SELECT 
+
+``` php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->select();
+```
+
+Permet de récupérer les résultats de toute la table. 
+
+#### Avec une clause ORDER BY 
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->orderBy('timestamp DESC')
+    			->select();
+```
+
+Permet d'organiser les résultats triés par timestamp en ordre descendant.
+
+#### Avec une clause LIMIT 
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->limit('0, 10')
+    			->select();
+```
+
+Permet de ne récupèrer que les 10 premiers résultats.
+
+#### Avec une jointure 
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->join('another_exemple', 'LEFT', 'ON another_example.ex_id = example.id',
+                      	['another_example.id AS another_example_id', 	
+                         'another_example.content'])
+    			->select();
+```
+
+Permet de récuperer les résultats avec une jointure sur  la table *another_example*.
+
+### Requête INSERT / UPDATE
+
+**Requête INSERT**
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->bind('content', 'Lorem ipsum dolor sit amet', PDO::PARAM_STR)
+    			->bind('timestamp', time(), PDO::PARAM_INT)
+    			->save();
+```
+
+**Requete UPDATE** 
+
+La différence, pour une requête UPDATE est que l'on spécifie l'id ainsi qu'une clause WHERE. 
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->bind('content', 'Lorem ipsum dolor sit amet', PDO::PARAM_STR)
+    			->bind('timestamp', time(), PDO::PARAM_INT)
+    			->bind('id',		'1',	PDO::PARAM_INT)
+    			->where('id = :id')
+    			->save();						
+```
+
+###  Requête DELETE
+
+```php
+$Queries = (new Queries($PDO))
+    			->table('example')
+    			->where('id > 10')
+    			->delete();
+```
+
+
 
