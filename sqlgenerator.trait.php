@@ -10,10 +10,6 @@ trait SQLGenerator
   private $limit = '';
   private $lastInsertId;
 
-  private $paginate = 0;
-  private $page;
-  private $nbOfElementsPerPage;
- 
   /** @var PDOStatement $statement */ 
   private $statement = NULL;
  
@@ -134,6 +130,8 @@ trait SQLGenerator
   public function select($fetchFunc = Queries::FETCH_ALL) : ? array 
   {
       $this->statement = NULL;
+      //
+      // Process the join clause
       $joinedCols = [];
       $joinClause = '';
       $c = 0;
@@ -154,28 +152,23 @@ trait SQLGenerator
                              . "\n FROM "  . $this->table
                            
                              . (!empty($joinClause) ? "\n" . $joinClause:'');
+      //
+      // Where
       if(!empty($this->where)) 
       {
-          // Where
           $this->_process_where_clause();
       }
-
+      //
       // Order By
       if(!empty($this->orderBy))
       {
           $this->SQL .= ' ORDER BY ' . implode(', ', $this->orderBy);
       }
-
+      //
       // Limit
       if(!empty($this->limit))
       {
           $this->SQL .= ' LIMIT ' . $this->limit;
-      }
-
-      elseif(empty($this->limit) && $this->paginate)
-      {
-          $offset = ($this->page - 1) * $this->nbOfElementsPerPage;
-          $this->SQL .= ' LIMIT ' . $this->nbOfElementsPerPage . ' OFFSET ' . $offset;
       }
 
       $this->_dump('sql.dump', $this->SQL);
@@ -199,14 +192,6 @@ trait SQLGenerator
       empty($this->statement) ? $r->closeCursor():$this->statement->closeCursor();
 
       return is_array($this->lastFetched) ? $this->lastFetched:[];
-  }
-
-  public function paginate(int $page, int $nbOfElementsPerPage) : object
-  {
-      $this->paginate = 1;
-      $this->page = $page;
-      $this->nbOfElementsPerPage = $nbOfElementsPerPage;
-      return $this;
   }
 
 
